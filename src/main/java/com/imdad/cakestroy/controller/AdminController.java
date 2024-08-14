@@ -1,7 +1,10 @@
 package com.imdad.cakestroy.controller;
 
+import com.imdad.cakestroy.dto.ProductDTO;
 import com.imdad.cakestroy.model.Category;
+import com.imdad.cakestroy.model.Product;
 import com.imdad.cakestroy.service.CategoryService;
+import com.imdad.cakestroy.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +19,9 @@ import java.util.Optional;
 public class AdminController {
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    ProductService productService;
+
 @GetMapping("/admin")
     public String adminHome() {
     return "adminHome";
@@ -39,6 +45,7 @@ public class AdminController {
         return "redirect:/admin/categories";
     }
 //Deleteing and Updating category
+
     @GetMapping("/admin/categories/delete/{id}")
     public String deleteCat(@PathVariable int id){
         categoryService.removeCategoryById(id);
@@ -52,5 +59,20 @@ public class AdminController {
             return "categoriesAdd";
         }else return "404";
     }
+
+    //Product Section
+
+    @GetMapping("/admin/products")
+    public String products(Model model){
+        model.addAttribute("products",productService.getAllProduct());
+        return "products";
+    }
+    @GetMapping("/admin/products/add")
+    public String productAddGet(Model model){
+        model.addAttribute("productDTO",new ProductDTO());
+        model.addAttribute("categories",categoryService.getAllCategories());
+        return "productsAdd";
+    }
+
 }
 
